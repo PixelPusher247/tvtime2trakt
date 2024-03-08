@@ -1,0 +1,9 @@
+﻿{
+  "ClientId": "your-client-id",
+  "ClientSecret": "your-client-secret",
+  "TvTimeDataFolder": "path-to-tvtime-data-folder",
+  "ProgressFile": "path-to-progress-file",
+  "IgnoreSkippedShows": false,
+  "IgnoreSkippedMovies": false,
+  "ConfirmationPromptBeforePost": true 
+}

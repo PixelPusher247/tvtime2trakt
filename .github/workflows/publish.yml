@@ -1,0 +1,54 @@
+name: Publish TvTime2Trakt Release
+
+on:
+  push:
+    branches: [main]
+
+env:
+  DOTNET_VERSION: '8.0.204'
+  
+jobs:
+  publish-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Publish release
+        run: |
+          dotnet publish TvTime2Trakt/TvTime2Trakt.csproj -c Release -r win-x64 -o /tmp/publish
+          cd /tmp/publish
+          zip -r release.zip TvTime2Trakt.exe config.json
+        env:
+          DOTNET_CLI_TELEMETRY_OPTOUT: 1
+          
+      - name: Get Current Date
+        id: current_date
+        run: echo "::set-output name=date::$(date +%Y-%m-%d)"
+        shell: bash
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.current_date.outputs.date }}
+          release_name: ${{ steps.current_date.outputs.date }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: /tmp/publish/release.zip
+          asset_name: release.zip
+          asset_content_type: application/zip
