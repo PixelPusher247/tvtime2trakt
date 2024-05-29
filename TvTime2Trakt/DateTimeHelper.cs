@@ -2,6 +2,7 @@
 
 public static class DateTimeHelper
 {
+    [Obsolete("TV Time seems to be exporting created_at and updated_at in parseable format now.")]
     public static DateTime ConvertTvTimeDate(string tvTimeDate)
     {
         var unixTimestamp = ConvertCustomDateFormat(tvTimeDate);

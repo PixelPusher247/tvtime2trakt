@@ -99,7 +99,7 @@ internal class TraktProcessor
     {
         if (!string.IsNullOrWhiteSpace(episodeV2.CreatedAt))
         {
-            return DateTimeHelper.ConvertTvTimeDate(episodeV2.CreatedAt);
+            return DateTime.Parse(episodeV2.CreatedAt);
         }
 
         if (episode is not null && !string.IsNullOrWhiteSpace(episode.CreatedAt))
